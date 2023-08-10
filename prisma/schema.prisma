@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE")
+}
+
+enum Role {
+  User
+  Admin
+}
+
+model Invite {
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  code   String   @unique
+  madeBy String
+  madeAt DateTime @default(now())
+  used   Boolean  @default(false)
+  usedBy String?
+}
+
+model Image {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  filename  String
+  createdAt DateTime @default(now())
+  createdBy String
+}
+
+model Session {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  token     String
+  createdBy String
+}
+
+model User {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  user            String   @unique
+  uuid            String   @unique @default(uuid())
+  uid             Int      @unique
+  password        String
+  inviteList      String[]
+  invites         Int      @default(0)
+  images          String[]
+  blacklisted     Boolean  @default(false)
+  blacklistReason String?
+  domain          String   @default("cdn.nigga-balls.host")
+  uploadKey       String   @unique
+  invited         String[]
+  createdOn       Int // unix timestamp
+  invitedBy       String
+  ips             String[]
+  roles           Role[]   @default([])
+  discordId       String   @default("")
+  discordAvatar   String   @default("") // Link to discord avatar
+}
+
+model Motd {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  motd      String
+  createdBy String // UUID
+  type      Int    @unique // 1 for dashboard
+}
