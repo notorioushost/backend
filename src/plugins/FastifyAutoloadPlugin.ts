@@ -25,13 +25,19 @@ export default async function (
 
 		// proxy func
 		async function run(req: FastifyRequest, res: FastifyReply) {
+			let run = true;
+
 			if (route.middlewares) {
 				route.middlewares.forEach(async (middleware) => {
-					const status = middleware.run(req, res);
+					const status = await middleware.run(req, res);
+
+					run = status;
 
 					if (!status) return;
 				});
 			}
+
+			if (run) return;
 
 			if (opts.proxy !== undefined)
 				return await opts.proxy(req, res, route);
