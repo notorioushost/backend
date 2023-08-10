@@ -48,7 +48,7 @@ model User {
   images          String[]
   blacklisted     Boolean  @default(false)
   blacklistReason String?
-  domain          String   @default("cdn.nigga-balls.host")
+  domain          String   @default("")
   uploadKey       String   @unique
   invited         String[]
   createdOn       Int // unix timestamp
