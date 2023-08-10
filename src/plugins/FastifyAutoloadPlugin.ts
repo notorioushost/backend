@@ -28,16 +28,16 @@ export default async function (
 			let run = true;
 
 			if (route.middlewares) {
-				route.middlewares.forEach(async (middleware) => {
+				for (const middleware of route.middlewares) {
 					const status = await middleware.run(req, res);
 
 					run = status;
 
 					if (!status) return;
-				});
+				}
 			}
 
-			if (run) return;
+			if (!run) return;
 
 			if (opts.proxy !== undefined)
 				return await opts.proxy(req, res, route);
